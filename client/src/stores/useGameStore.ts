@@ -31,10 +31,9 @@ export const useGameStore = defineStore('game', () => {
     return true
   }
 
-  function convertToGolden(type: string, amount: number): boolean {
+  function convertToGolden(type: string, amount: number) {
     energies.value[type as PokemonTypeName] = 0
     goldenEnergy.value += amount
-    return true
   }
 
   function addEnergy(type: string, amount: number) {

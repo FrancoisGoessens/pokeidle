@@ -4,7 +4,6 @@ import type { Pokemon } from '../types/pokemon'
 
 const globalTick = ref(0)
 let interval: ReturnType<typeof setInterval> | null = null
-let instanceCount = 0
 
 export function useProductionLoop() {
   const gameStore = useGameStore()
@@ -23,7 +22,6 @@ export function useProductionLoop() {
       if (types.length === 1 && types[0]) {
         gameStore.addEnergy(types[0], getProductionPerSecond(pokemon))
       } else {
-        const tick = Math.floor(Date.now() / 1000)
         const activeType = types[globalTick.value % 2]
         if (activeType) {
           gameStore.addEnergy(activeType, getProductionPerSecond(pokemon))
@@ -33,15 +31,13 @@ export function useProductionLoop() {
   }
 
   function start() {
-    instanceCount++
     if (!interval) {
       interval = setInterval(tick, 1000)
     }
   }
 
   function stop() {
-    instanceCount--
-    if (instanceCount <= 0 && interval) {
+    if (interval) {
       clearInterval(interval)
       interval = null
     }
