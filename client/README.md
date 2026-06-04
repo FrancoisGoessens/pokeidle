@@ -1,54 +1,88 @@
-# client
+# PokéIdle 🔥
 
-This template should help get you started developing with Vue 3 in Vite.
+🎮 **[Jouer sur GitHub Pages](https://francoisgoessens.github.io/pokeidle/)**
 
-## Recommended IDE Setup
+Un jeu idle basé sur l'univers Pokémon, développé en Vue 3 + Node.js. Les Pokémon farment passivement des énergies typées, évoluent, et débloquent de nouveaux membres pour ton équipe.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+---
 
-## Recommended Browser Setup
+## Stack technique
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+**Frontend**
+- Vue 3 (Composition API, `<script setup>`)
+- TypeScript
+- Vite
+- Vuetify 3
+- Pinia
+- Vitest
 
-## Type Support for `.vue` Imports in TS
+**Backend**
+- Node.js
+- Express
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+**API externe**
+- [PokéAPI](https://pokeapi.co) — données, sprites et stats des Pokémon
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Mécaniques de jeu
 
-## Project Setup
+### Production d'énergie
+Chaque Pokémon recruté produit passivement de l'énergie par seconde, calculée sur sa stat `speed` :
+```
+production/s = speed / 50
+```
+Les Pokémon dual-type alternent entre leurs deux énergies à chaque tick.
 
-```sh
-npm install
+### Énergies typées
+15 types de la Gen 1 disponibles : Normal, Feu, Eau, Plante, Électrik, Glace, Combat, Poison, Sol, Vol, Psy, Insecte, Roche, Spectre, Dragon.
+
+### Golden Energy
+Monnaie universelle obtenue en convertissant des énergies typées (1:1). Utilisée pour recruter de nouveaux Pokémon.
+
+### Recrutement
+Choisir un type → obtenir un œuf → Pokémon aléatoire de ce type pas encore possédé (pokemon de base uniquement, pas d'évolution à la sortie de l'oeuf). Le coût scale à chaque achat selon une courbe progressive :
+```ts
+const multiplier = (i) => Math.max(1.5, 1.9 - i * 0.05)
 ```
 
-### Compile and Hot-Reload for Development
+### Évolutions
+Chaque Pokémon peut évoluer en dépensant de l'énergie de son type. L'évolution augmente la stat `speed` et donc la production. Les coûts scalent globalement.
 
-```sh
+### Shiny
+1 chance sur 500 d'obtenir un Pokémon shiny à l'achat. Un shiny produit ×10 par rapport à la version normale.
+
+---
+
+## Lancer le projet
+
+**Prérequis** : Node.js 18+
+
+```bash
+# Cloner le repo
+git clone https://github.com/TON_USERNAME/pokeidle.git
+cd pokeidle
+
+# Frontend
+cd client
+npm install
+npm run dev
+
+# Backend (autre terminal)
+cd server
+npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+- Frontend : http://localhost:5173
+- Backend : http://localhost:3000
 
-```sh
-npm run build
-```
+---
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## À venir
 
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- Système d'évolution complet
+- Pokédex visuel avec filtres
+- Sauvegarde de partie
+- Système de quêtes
+- Prestige
